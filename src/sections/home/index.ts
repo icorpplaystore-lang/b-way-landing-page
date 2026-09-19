@@ -1,0 +1,13 @@
+export { HomeHero } from "./HomeHero";
+export { HomePillars } from "./HomePillars";
+export { HomeWhy } from "./HomeWhy";
+export { HomeTechServices } from "./HomeTechServices";
+export { HomeWorkforceServices } from "./HomeWorkforceServices";
+export { HomeSectors } from "./HomeSectors";
+export { HomeAutomation } from "./HomeAutomation";
+export { HomeProcess } from "./HomeProcess";
+export { HomeProjects } from "./HomeProjects";
+export { HomeDualCta } from "./HomeDualCta";
+export { HomeCompliance } from "./HomeCompliance";
+export { HomeTestimonials } from "./HomeTestimonials";
+export { HomeArticles } from "./HomeArticles";
