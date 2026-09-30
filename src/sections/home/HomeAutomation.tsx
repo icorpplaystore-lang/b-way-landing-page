@@ -62,7 +62,7 @@ export function HomeAutomation() {
         </div>
 
         <div className="mt-10 text-center">
-          <Button href="/services?tab=technology#ai-automation" showArrow>
+          <Button href="/services/ai-automation" showArrow>
             Explore AI Automation
           </Button>
         </div>

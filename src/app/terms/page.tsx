@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { buildMetadata } from "@/lib/seo/metadata";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata, PAGES } from "@/lib/seo/metadata";
 import {
   CheckCircle2,
   ExternalLink,
@@ -50,6 +51,16 @@ const candidateDocs = [
 export default function TermsOfServicePage() {
   return (
     <>
+      <JsonLd
+        type="page"
+        path="/terms"
+        name={PAGES.terms.title}
+        description={PAGES.terms.description}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Terms of Service", path: "/terms" },
+        ]}
+      />
       <section className="overflow-hidden bg-gradient-to-br from-white via-slate-50 to-blue-50/50">
         <Container className="py-16 lg:py-20">
           <div className="max-w-3xl">

@@ -18,6 +18,7 @@ export default function robots(): MetadataRoute.Robots {
       { userAgent: "anthropic-ai", allow: "/" },
       { userAgent: "Applebot-Extended", allow: "/" },
       { userAgent: "Amazonbot", allow: "/" },
+      { userAgent: "Redditbot", allow: "/" },
     ],
     sitemap: `${SITE.url}/sitemap.xml`,
     host: SITE.url,

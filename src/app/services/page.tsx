@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Suspense } from "react";
+import { servicePages } from "@/lib/data/service-pages";
 import { buildMetadata, PAGES } from "@/lib/seo/metadata";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { CtaBanner } from "@/components/shared/CtaBanner";
@@ -23,6 +24,10 @@ export default function ServicesPage() {
           { name: "Home", path: "/" },
           { name: "Services", path: "/services" },
         ]}
+        itemList={servicePages.map((service) => ({
+          name: service.title,
+          path: `/services/${service.slug}`,
+        }))}
       />
       <ServicesHero />
       <Suspense

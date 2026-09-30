@@ -1,10 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import {
   ArrowRight,
-  Calendar,
   CheckCircle2,
   Clock,
   FileText,
@@ -14,6 +13,7 @@ import {
   Headset,
   MessageSquare,
   Phone,
+  X,
 } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -30,10 +30,34 @@ import {
 } from "@/components/ui/PageHero";
 import { Section } from "@/components/ui/Section";
 import { SectionHeading } from "@/components/ui/SectionHeading";
+import {
+  ENQUIRY_BUDGET_OPTIONS,
+  ENQUIRY_TIMELINE_OPTIONS,
+  parseEnquiry,
+} from "@/lib/contact/enquiry";
+import { submitEnquiry } from "@/lib/contact/submit-enquiry";
 import { CONTACT_HELP_OPTIONS, SITE } from "@/lib/constants";
 import { contactFeatures, contactProcess } from "@/lib/data/site-content";
 import { cn } from "@/lib/utils";
 import type { LucideIcon } from "lucide-react";
+
+const whatsappHref = `https://wa.me/${SITE.whatsapp.replace(/\D/g, "")}`;
+const officeMapsHref = `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(SITE.address)}`;
+
+const WEEKLY_HOURS = [
+  { day: "Wednesday", hours: "Open 24 hours" },
+  { day: "Thursday", hours: "Open 24 hours" },
+  {
+    day: "Friday",
+    note: "Gandhi Jayanti",
+    hours: "Open 24 hours",
+    hoursNote: "Hours might differ",
+  },
+  { day: "Saturday", hours: "Open 24 hours" },
+  { day: "Sunday", hours: "Open 24 hours" },
+  { day: "Monday", hours: "Open 24 hours" },
+  { day: "Tuesday", hours: "Open 24 hours" },
+] as const;
 
 export function ContactHero() {
   return (
@@ -149,6 +173,58 @@ export function ContactHero() {
 export function ContactFormSection() {
   const [emailValid, setEmailValid] = useState(false);
   const [emailTouched, setEmailTouched] = useState(false);
+  const [status, setStatus] = useState<"idle" | "submitting" | "success" | "error">(
+    "idle",
+  );
+  const [errorMessage, setErrorMessage] = useState("");
+  const [hoursOpen, setHoursOpen] = useState(false);
+  const closeHours = useCallback(() => setHoursOpen(false), []);
+
+  async function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (status === "submitting") return;
+
+    const form = event.currentTarget;
+    const data = new FormData(form);
+    const enquiry = parseEnquiry({
+      name: data.get("name"),
+      company: data.get("company"),
+      email: data.get("email"),
+      help: data.get("help"),
+      budget: data.get("budget"),
+      timeline: data.get("timeline"),
+      message: data.get("message"),
+      botcheck: data.get("botcheck") === "on",
+    });
+
+    if (!enquiry.ok) {
+      setStatus("error");
+      setErrorMessage(enquiry.message);
+      return;
+    }
+
+    setStatus("submitting");
+    setErrorMessage("");
+
+    try {
+      const result = await submitEnquiry(enquiry.data);
+      if (!result.ok) {
+        setStatus("error");
+        setErrorMessage(result.message);
+        return;
+      }
+
+      form.reset();
+      setEmailTouched(false);
+      setEmailValid(false);
+      setStatus("success");
+    } catch {
+      setStatus("error");
+      setErrorMessage(
+        "We couldn't send your enquiry. Check your connection and try again.",
+      );
+    }
+  }
 
   return (
     <Section id="contact-form" tone="surface">
@@ -178,7 +254,9 @@ export function ContactFormSection() {
                     </p>
                     <div className="mt-1.5 flex flex-col gap-1.5 text-sm text-muted">
                       <a
-                        href={`tel:${SITE.phone.replace(/\s/g, "")}`}
+                        href={whatsappHref}
+                        target="_blank"
+                        rel="noreferrer"
                         className="inline-flex items-center gap-2 hover:text-primary"
                       >
                         <FlagSingapore />
@@ -194,25 +272,33 @@ export function ContactFormSection() {
                     </div>
                   </div>
                 </div>
-                <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary-light text-primary">
+                <a
+                  href={whatsappHref}
+                  target="_blank"
+                  rel="noreferrer"
+                  aria-label="Chat on WhatsApp"
+                  className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary"
+                >
                   <ArrowRight className="h-4 w-4" />
-                </span>
+                </a>
               </div>
 
-              <ContactInfoCard icon={Clock} title="Business Hours">
+              <ContactInfoCard
+                icon={Clock}
+                title="Business Hours"
+                onClick={() => setHoursOpen(true)}
+              >
                 {SITE.hours}
               </ContactInfoCard>
 
-              <ContactInfoCard icon={MapPin} title="Office Address">
+              <ContactInfoCard
+                icon={MapPin}
+                title="Office Address"
+                href={officeMapsHref}
+                external
+              >
                 {SITE.address}
               </ContactInfoCard>
-            </div>
-
-            <div className="mt-6 rounded-2xl border border-border bg-white p-5">
-              <p className="text-sm font-semibold text-slate-900">
-                Singapore Office
-              </p>
-              <p className="mt-2 text-sm text-muted">{SITE.address}</p>
             </div>
           </div>
 
@@ -225,14 +311,55 @@ export function ContactFormSection() {
               Let&apos;s understand your requirement
             </h2>
 
-            <form className="mt-8 space-y-5">
-              <Field label="Full Name *" placeholder="Alex Tan" />
-              <Field label="Company Name" placeholder="Your company name" />
+            {status === "success" ? (
+              <div className="mt-8 rounded-2xl border border-emerald-200 bg-emerald-50 p-6">
+                <p className="flex items-center gap-2 text-sm font-semibold text-emerald-700">
+                  <CheckCircle2 className="h-4 w-4" />
+                  Enquiry sent
+                </p>
+                <p className="mt-2 text-sm leading-relaxed text-emerald-800">
+                  Thanks for reaching out. We received your message and will
+                  reply by email.
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setStatus("idle")}
+                  className="mt-4 text-sm font-semibold text-primary"
+                >
+                  Send another enquiry
+                </button>
+              </div>
+            ) : (
+              <form className="mt-8 space-y-5" onSubmit={handleSubmit}>
+              <input
+                type="checkbox"
+                name="botcheck"
+                tabIndex={-1}
+                autoComplete="off"
+                className="hidden"
+                aria-hidden="true"
+              />
+              <Field
+                label="Full Name *"
+                name="name"
+                placeholder="Alex Tan"
+                required
+                autoComplete="name"
+              />
+              <Field
+                label="Company Name"
+                name="company"
+                placeholder="Your company name"
+                autoComplete="organization"
+              />
               <div>
                 <Field
                   label="Business Email *"
+                  name="email"
                   type="email"
                   placeholder="you@company.com"
+                  required
+                  autoComplete="email"
                   onChange={(value) => {
                     setEmailTouched(true);
                     setEmailValid(value.includes("@") && value.includes("."));
@@ -247,62 +374,113 @@ export function ContactFormSection() {
               </div>
               <SelectField
                 label="What can we help you with? *"
-                options={[...CONTACT_HELP_OPTIONS]}
+                name="help"
+                options={CONTACT_HELP_OPTIONS}
+                required
               />
               <div className="grid gap-4 sm:grid-cols-2">
                 <SelectField
                   label="Budget Range"
-                  options={[
-                    "$5k – $10k",
-                    "$10k – $25k",
-                    "$25k – $50k",
-                    "$50k – $150k",
-                    "$150k+",
-                  ]}
+                  name="budget"
+                  options={ENQUIRY_BUDGET_OPTIONS}
+                  placeholder="Not specified"
                 />
                 <SelectField
                   label="Timeline"
-                  options={["ASAP", "1–3 months", "3–6 months", "Flexible"]}
+                  name="timeline"
+                  options={ENQUIRY_TIMELINE_OPTIONS}
+                  placeholder="Not specified"
                 />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-semibold text-slate-800">
+                <label
+                  htmlFor="message"
+                  className="mb-2 block text-sm font-semibold text-slate-800"
+                >
                   Tell us about your requirement *
                 </label>
                 <textarea
+                  id="message"
+                  name="message"
+                  required
+                  minLength={10}
+                  maxLength={4000}
                   rows={4}
                   placeholder="Briefly describe your project goals, timeline, and what success looks like..."
                   className="w-full rounded-xl border border-border bg-white px-4 py-3 text-sm outline-none ring-primary/30 placeholder:text-slate-400 focus:ring-2"
                 />
               </div>
-              <Button type="submit" className="w-full" size="lg" showArrow>
-                Send Enquiry
+              {status === "error" ? (
+                <p className="text-sm font-medium text-rose-600" role="alert">
+                  {errorMessage}
+                </p>
+              ) : null}
+              <Button
+                type="submit"
+                className="w-full"
+                size="lg"
+                showArrow
+                disabled={status === "submitting"}
+              >
+                {status === "submitting" ? "Sending..." : "Send Enquiry"}
               </Button>
-            </form>
+              </form>
+            )}
 
-            <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            <div className="mt-6 grid grid-cols-3 gap-3">
               {[
                 { label: "LinkedIn", icon: Link2, className: "text-blue-600" },
-                { label: "Email", icon: Mail, className: "text-rose-600" },
-                { label: "WhatsApp", icon: MessageSquare, className: "text-emerald-600" },
-                { label: "Book a Call", icon: Calendar, className: "text-orange-600" },
-              ].map((item) => (
-                <button
-                  key={item.label}
-                  type="button"
-                  className={cn(
-                    "inline-flex items-center justify-center gap-1.5 rounded-lg border border-border px-2 py-2 text-xs font-semibold",
-                    item.className,
-                  )}
-                >
-                  <item.icon className="h-3.5 w-3.5" />
-                  {item.label}
-                </button>
-              ))}
+                {
+                  label: "Email",
+                  icon: Mail,
+                  className: "text-rose-600",
+                  href: `mailto:${SITE.email}`,
+                },
+                {
+                  label: "WhatsApp",
+                  icon: MessageSquare,
+                  className: "text-emerald-600",
+                  href: `https://wa.me/${SITE.whatsapp.replace(/\D/g, "")}`,
+                  external: true,
+                },
+              ].map((item) => {
+                const className = cn(
+                  "inline-flex items-center justify-center gap-1.5 rounded-lg border border-border px-2 py-2 text-xs font-semibold",
+                  item.className,
+                );
+                const content = (
+                  <>
+                    <item.icon className="h-3.5 w-3.5" />
+                    {item.label}
+                  </>
+                );
+
+                if (!item.href) {
+                  return (
+                    <button key={item.label} type="button" className={className}>
+                      {content}
+                    </button>
+                  );
+                }
+
+                return (
+                  <a
+                    key={item.label}
+                    href={item.href}
+                    className={className}
+                    {...(item.external
+                      ? { target: "_blank", rel: "noreferrer" }
+                      : {})}
+                  >
+                    {content}
+                  </a>
+                );
+              })}
             </div>
           </div>
         </div>
       </Container>
+      <BusinessHoursDialog open={hoursOpen} onClose={closeHours} />
     </Section>
   );
 }
@@ -312,52 +490,159 @@ function ContactInfoCard({
   title,
   children,
   href,
+  external = false,
+  onClick,
 }: {
   icon: LucideIcon;
   title: string;
   children: React.ReactNode;
   href?: string;
+  external?: boolean;
+  onClick?: () => void;
 }) {
-  return (
-    <div className="flex items-center justify-between gap-4 rounded-2xl border border-border bg-white p-4">
+  const className =
+    "flex w-full items-center justify-between gap-4 rounded-2xl border border-border bg-white p-4 text-left transition-colors hover:border-primary";
+  const content = (
+    <>
       <div className="flex items-center gap-3">
         <IconBadge icon={icon} />
         <div>
           <p className="text-sm font-semibold text-slate-900">{title}</p>
-          {href ? (
-            <a href={href} className="text-sm text-muted hover:text-primary">
-              {children}
-            </a>
-          ) : (
-            <p className="text-sm text-muted">{children}</p>
-          )}
+          <p className="text-sm text-muted">{children}</p>
         </div>
       </div>
-      <span className="inline-flex h-9 w-9 items-center justify-center rounded-full bg-primary-light text-primary">
+      <span className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-primary-light text-primary">
         <ArrowRight className="h-4 w-4" />
       </span>
+    </>
+  );
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        className={className}
+        {...(external ? { target: "_blank", rel: "noreferrer" } : {})}
+      >
+        {content}
+      </a>
+    );
+  }
+
+  return (
+    <button type="button" onClick={onClick} className={className}>
+      {content}
+    </button>
+  );
+}
+
+function BusinessHoursDialog({
+  open,
+  onClose,
+}: {
+  open: boolean;
+  onClose: () => void;
+}) {
+  useEffect(() => {
+    if (!open) return;
+
+    function onKeyDown(event: KeyboardEvent) {
+      if (event.key === "Escape") onClose();
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    document.addEventListener("keydown", onKeyDown);
+
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener("keydown", onKeyDown);
+    };
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <button
+        type="button"
+        aria-label="Close business hours"
+        className="absolute inset-0 bg-slate-900/40"
+        onClick={onClose}
+      />
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="business-hours-title"
+        className="relative w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl"
+      >
+        <div className="flex items-start justify-between gap-4">
+          <h3
+            id="business-hours-title"
+            className="text-base font-semibold text-slate-900"
+          >
+            Business Hours
+          </h3>
+          <button
+            type="button"
+            onClick={onClose}
+            aria-label="Close"
+            className="inline-flex h-8 w-8 items-center justify-center rounded-full text-slate-500 hover:bg-slate-100"
+          >
+            <X className="h-4 w-4" />
+          </button>
+        </div>
+        <ul className="mt-5 space-y-4">
+          {WEEKLY_HOURS.map((entry) => (
+            <li key={entry.day} className="flex items-start justify-between gap-6">
+              <div>
+                <p className="text-sm font-semibold text-slate-900">{entry.day}</p>
+                {"note" in entry ? (
+                  <p className="text-sm text-slate-500">{entry.note}</p>
+                ) : null}
+              </div>
+              <div className="text-right">
+                <p className="text-sm text-slate-800">{entry.hours}</p>
+                {"hoursNote" in entry ? (
+                  <p className="text-sm text-slate-500">{entry.hoursNote}</p>
+                ) : null}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
     </div>
   );
 }
 
 function Field({
   label,
+  name,
   placeholder,
   type = "text",
+  required = false,
+  autoComplete,
   onChange,
 }: {
   label: string;
+  name: string;
   placeholder: string;
   type?: string;
+  required?: boolean;
+  autoComplete?: string;
   onChange?: (value: string) => void;
 }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-slate-800">
+      <label htmlFor={name} className="mb-2 block text-sm font-semibold text-slate-800">
         {label}
       </label>
       <input
+        id={name}
+        name={name}
         type={type}
+        required={required}
+        autoComplete={autoComplete}
         placeholder={placeholder}
         onChange={(event) => onChange?.(event.target.value)}
         className="h-11 w-full rounded-xl border border-border bg-white px-4 text-sm outline-none ring-primary/30 placeholder:text-slate-400 focus:ring-2"
@@ -368,19 +653,36 @@ function Field({
 
 function SelectField({
   label,
+  name,
   options,
+  required = false,
+  placeholder = "Select an option",
 }: {
   label: string;
-  options: string[];
+  name: string;
+  options: readonly string[];
+  required?: boolean;
+  placeholder?: string;
 }) {
   return (
     <div>
-      <label className="mb-2 block text-sm font-semibold text-slate-800">
+      <label htmlFor={name} className="mb-2 block text-sm font-semibold text-slate-800">
         {label}
       </label>
-      <select className="h-11 w-full rounded-xl border border-border bg-white px-4 text-sm outline-none ring-primary/30 focus:ring-2">
+      <select
+        id={name}
+        name={name}
+        required={required}
+        defaultValue=""
+        className="h-11 w-full rounded-xl border border-border bg-white px-4 text-sm outline-none ring-primary/30 focus:ring-2"
+      >
+        <option value="" disabled={required}>
+          {placeholder}
+        </option>
         {options.map((option) => (
-          <option key={option}>{option}</option>
+          <option key={option} value={option}>
+            {option}
+          </option>
         ))}
       </select>
     </div>

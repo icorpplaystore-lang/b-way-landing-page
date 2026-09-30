@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { buildMetadata } from "@/lib/seo/metadata";
+import { JsonLd } from "@/components/seo/JsonLd";
+import { buildMetadata, PAGES } from "@/lib/seo/metadata";
 import Link from "next/link";
 import {
   CheckCircle2,
@@ -59,6 +60,16 @@ const collectionPoints = [
 export default function PrivacyPolicyPage() {
   return (
     <>
+      <JsonLd
+        type="page"
+        path="/privacy"
+        name={PAGES.privacy.title}
+        description={PAGES.privacy.description}
+        breadcrumbs={[
+          { name: "Home", path: "/" },
+          { name: "Privacy Policy", path: "/privacy" },
+        ]}
+      />
       <section className="overflow-hidden bg-gradient-to-br from-white via-slate-50 to-blue-50/50">
         <Container className="py-16 lg:py-20">
           <div className="max-w-3xl">

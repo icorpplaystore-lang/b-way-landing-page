@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import { Award, ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -20,11 +20,9 @@ import { SectionHeading } from "@/components/ui/SectionHeading";
 import { TextLink } from "@/components/ui/TextLink";
 import {
   partnershipStats,
-  portfolioFilters,
   portfolioProjects,
   testimonials,
 } from "@/lib/data/site-content";
-import { cn } from "@/lib/utils";
 
 export function PortfolioHero() {
   return (
@@ -37,8 +35,8 @@ export function PortfolioHero() {
           Real Solutions. Real Impact.
         </h1>
         <p className="mt-5 max-w-xl text-sm leading-relaxed text-muted sm:text-base md:text-lg">
-          Explore selected work across web, mobile, SaaS, and AI — built for
-          teams that needed clarity, speed, and lasting partnership.
+          Six website case studies. Each one has its own name, design system,
+          and a page that explains what changed.
         </p>
         <div className="mt-8 hidden gap-5 sm:grid-cols-3 lg:grid">
           {[
@@ -59,7 +57,7 @@ export function PortfolioHero() {
           <HeroImageFrame aspect="aspect-[4/3] lg:aspect-[5/4] lg:max-h-[440px]">
             <Image
               src="/images/hero-portfolio.jpg"
-              alt="Professional working with data dashboards"
+              alt="Person reviewing digital dashboards, representing B-Way website work"
               fill
               priority
               className="object-cover object-center"
@@ -103,13 +101,6 @@ export function PortfolioHero() {
 }
 
 export function PortfolioGrid() {
-  const [filter, setFilter] = useState("All");
-
-  const projects = useMemo(() => {
-    if (filter === "All") return portfolioProjects;
-    return portfolioProjects.filter((project) => project.filter === filter);
-  }, [filter]);
-
   return (
     <Section>
       <Container>
@@ -136,26 +127,8 @@ export function PortfolioGrid() {
           </div>
         </div>
 
-        <div className="mb-10 flex flex-wrap gap-2">
-          {portfolioFilters.map((item) => (
-            <button
-              key={item}
-              type="button"
-              onClick={() => setFilter(item)}
-              className={cn(
-                "rounded-full border px-4 py-2 text-sm font-semibold transition-colors",
-                filter === item
-                  ? "border-primary bg-primary text-white"
-                  : "border-border bg-white text-slate-600 hover:border-primary hover:text-primary",
-              )}
-            >
-              {item}
-            </button>
-          ))}
-        </div>
-
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-          {projects.map((project) => (
+          {portfolioProjects.map((project) => (
             <article
               key={project.title}
               className="overflow-hidden rounded-2xl border border-border bg-white transition-all duration-300 hover:-translate-y-1 hover:shadow-lg hover:shadow-slate-200/70"
@@ -163,17 +136,15 @@ export function PortfolioGrid() {
               <div className="relative h-52">
                 <Image
                   src={project.image}
-                  alt={project.title}
+                  alt={project.imageAlt}
                   fill
-                  className="object-cover"
+                  quality={90}
+                  className="object-cover object-top"
                   sizes="(max-width: 768px) 100vw, 33vw"
                 />
               </div>
               <div className="p-6">
-                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-                  {project.category}
-                </p>
-                <h3 className="mt-2 text-xl font-bold text-slate-900">
+                <h3 className="text-xl font-bold text-slate-900">
                   {project.title}
                 </h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">
@@ -189,7 +160,7 @@ export function PortfolioGrid() {
                     </span>
                   ))}
                 </div>
-                <TextLink href="/contact" className="mt-5">
+                <TextLink href={`/portfolio/${project.slug}`} className="mt-5">
                   View Case Study
                 </TextLink>
               </div>

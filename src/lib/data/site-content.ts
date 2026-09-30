@@ -210,7 +210,7 @@ export const workforceServicesDetailed = [
     title: "Recruitment / Staffing",
     description:
       "Recruitment and staffing services that help businesses fill critical roles with suitable professionals across operational and specialist needs.",
-    href: "/services?tab=workforce#recruitment-staffing",
+    href: "/services/recruitment-staffing",
     points: [
       "Role-based recruitment support",
       "Staffing for operational requirements",
@@ -454,73 +454,7 @@ export const homeProjects = [
   },
 ];
 
-export const portfolioFilters = [
-  "All",
-  "Websites",
-  "Web Applications",
-  "Mobile Apps",
-  "AI & Automation",
-  "E-commerce",
-  "Custom Software",
-  "Data & Analytics",
-];
-
-export const portfolioProjects = [
-  {
-    title: "Logistics Management Platform",
-    description: "Unified operations suite for routing, inventory, and partner coordination.",
-    category: "Transportation",
-    image:
-      "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&w=900&q=80",
-    tags: ["Strategy", "Logistics"],
-    filter: "Web Applications",
-  },
-  {
-    title: "Patient Care Companion",
-    description: "Mobile experience for appointments, reminders, and secure messaging.",
-    category: "Healthcare",
-    image:
-      "https://images.unsplash.com/photo-1576091160550-2173dba999ef?auto=format&fit=crop&w=900&q=80",
-    tags: ["Mobile", "UX"],
-    filter: "Mobile Apps",
-  },
-  {
-    title: "Commerce Growth Engine",
-    description: "High-converting storefront with personalization and inventory sync.",
-    category: "Retail",
-    image:
-      "https://images.unsplash.com/photo-1556742049-0cfed4f6a45d?auto=format&fit=crop&w=900&q=80",
-    tags: ["E-commerce", "Growth"],
-    filter: "E-commerce",
-  },
-  {
-    title: "Finance Insights Cloud",
-    description: "Analytics product for executive reporting and forecasting.",
-    category: "Fintech",
-    image:
-      "https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=900&q=80",
-    tags: ["SaaS", "Analytics"],
-    filter: "Data & Analytics",
-  },
-  {
-    title: "AI Ops Assistant",
-    description: "Automation layer that reduces manual triage across support workflows.",
-    category: "AI",
-    image:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=900&q=80",
-    tags: ["AI", "Automation"],
-    filter: "AI & Automation",
-  },
-  {
-    title: "Corporate Website System",
-    description: "Brand website platform with modular pages and growth-ready SEO foundations.",
-    category: "Corporate",
-    image:
-      "https://images.unsplash.com/photo-1467232004584-a241de8bcf5d?auto=format&fit=crop&w=900&q=80",
-    tags: ["Websites", "SEO"],
-    filter: "Websites",
-  },
-];
+export { portfolioProjects } from "./portfolio-projects";
 
 export const technologyTestimonials = [
   {

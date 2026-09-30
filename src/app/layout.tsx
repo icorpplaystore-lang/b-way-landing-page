@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans, Playfair_Display, Geist_Mono } from "next/font/googl
 import { Footer } from "@/components/layout/Footer";
 import { Navbar } from "@/components/layout/Navbar";
 import { RouteScrollManager } from "@/components/navigation/RouteScrollManager";
+import { Breadcrumbs } from "@/components/seo/Breadcrumbs";
 import { rootMetadata } from "@/lib/seo/metadata";
 import "./globals.css";
 
@@ -38,9 +39,18 @@ export default function RootLayout({
       data-scroll-behavior="smooth"
     >
       <body className="flex min-h-full flex-col bg-white font-sans text-foreground">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[60] focus:rounded-lg focus:bg-primary focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-white"
+        >
+          Skip to content
+        </a>
         <RouteScrollManager />
         <Navbar />
-        <main className="flex-1">{children}</main>
+        <Breadcrumbs />
+        <main id="main-content" className="flex-1">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>

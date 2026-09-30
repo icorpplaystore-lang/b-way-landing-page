@@ -36,11 +36,11 @@ export function Navbar() {
       className="sticky top-0 z-50 border-b border-border/70 bg-white/90 backdrop-blur-md"
       style={{ viewTransitionName: "site-header" }}
     >      <Container className="flex h-16 items-center justify-between gap-2 lg:h-[72px]">
-        <Link href="/" className="shrink-0">
+        <Link href="/" className="shrink-0" aria-label="B-Way home">
           <BrandLogo size="sm" />
         </Link>
 
-        <nav className="hidden items-center gap-6 xl:gap-7 lg:flex">
+        <nav aria-label="Primary" className="hidden items-center gap-6 xl:gap-7 lg:flex">
           {NAV_LINKS.map((link) => {
             if (link.href === "/services") {
               return (
@@ -158,8 +158,9 @@ export function Navbar() {
             type="button"
             className="inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-lg border border-border text-slate-700 lg:hidden"
             onClick={() => setIsOpen((prev) => !prev)}
-            aria-label="Toggle menu"
+            aria-label={isOpen ? "Close menu" : "Open menu"}
             aria-expanded={isOpen}
+            aria-controls="mobile-navigation"
           >
             {isOpen ? <X className="h-5 w-5" /> : <Menu className="h-5 w-5" />}
           </button>
@@ -167,7 +168,11 @@ export function Navbar() {
       </Container>
 
       {isOpen ? (
-        <div className="max-h-[min(80vh,640px)] overflow-y-auto border-t border-border bg-white lg:hidden">
+        <nav
+          id="mobile-navigation"
+          aria-label="Mobile"
+          className="max-h-[min(80vh,640px)] overflow-y-auto border-t border-border bg-white lg:hidden"
+        >
           <Container className="flex flex-col gap-1 py-4 pb-6">
             {NAV_LINKS.map((link) => {
               const isActive = pathname === link.href;
@@ -287,7 +292,7 @@ export function Navbar() {
               Get a Free Consultation
             </Button>
           </Container>
-        </div>
+        </nav>
       ) : null}
     </header>
   );

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { portfolioProjects } from "@/lib/data/portfolio-projects";
 import { buildMetadata, PAGES } from "@/lib/seo/metadata";
 import { JsonLd } from "@/components/seo/JsonLd";
 import {
@@ -23,6 +24,11 @@ export default function PortfolioPage() {
           { name: "Home", path: "/" },
           { name: "Portfolio", path: "/portfolio" },
         ]}
+        itemList={portfolioProjects.map((project) => ({
+          name: project.title,
+          path: `/portfolio/${project.slug}`,
+          image: project.image,
+        }))}
       />
       <PortfolioHero />
       <PortfolioGrid />

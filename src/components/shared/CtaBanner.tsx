@@ -33,7 +33,7 @@ export function CtaBanner({
           <div className="absolute inset-0 opacity-40">
             <Image
               src={image}
-              alt="City skyline"
+              alt="Office towers in the city, used as a background behind the invitation to talk with B-Way"
               fill
               className="object-cover"
               sizes="100vw"
