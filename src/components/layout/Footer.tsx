@@ -24,7 +24,7 @@ export function Footer() {
         <div className="grid gap-10 sm:grid-cols-2 lg:grid-cols-12 lg:gap-8">
           {/* Brand */}
           <div className="sm:col-span-2 lg:col-span-3">
-            <Link href="/">
+            <Link href="/" aria-label="B-Way home">
               <BrandLogo />
             </Link>
             <p className="mt-4 text-sm font-semibold text-slate-900">
@@ -84,6 +84,7 @@ export function Footer() {
               Contact
             </h3>
 
+            <address className="not-italic">
             <ul className="space-y-3.5 text-sm text-muted">
               <li className="flex items-start gap-3">
                 <Mail className="mt-0.5 h-4 w-4 shrink-0 text-primary" />
@@ -104,6 +105,7 @@ export function Footer() {
                     rel="noreferrer"
                     className="inline-flex items-center gap-2 transition-colors hover:text-primary"
                     title="Chat on WhatsApp"
+                    aria-label={`Chat with ${SITE.name} on WhatsApp at ${SITE.phone}`}
                   >
                     <FlagSingapore />
                     <span>{SITE.phone}</span>
@@ -130,14 +132,16 @@ export function Footer() {
                 {SITE.hours}
               </li>
             </ul>
+            </address>
 
-            <form className="mt-6 space-y-2.5">
+            <form className="mt-6 space-y-2.5" aria-label="Newsletter">
               <p className="text-xs font-semibold uppercase tracking-wide text-slate-900">
                 Newsletter
               </p>
               <div className="flex flex-col gap-2.5 sm:flex-row lg:flex-col">
                 <input
                   type="email"
+                  aria-label="Email address"
                   placeholder="Enter your email"
                   className="h-11 w-full rounded-lg border border-border bg-white px-3 text-sm outline-none ring-primary/30 placeholder:text-slate-400 focus:ring-2"
                 />
@@ -190,7 +194,7 @@ function FooterColumn({
   links: readonly { label: string; href: string }[];
 }) {
   return (
-    <div>
+    <nav aria-label={title}>
       <h3 className="mb-4 text-sm font-semibold uppercase tracking-wide text-slate-900">
         {title}
       </h3>
@@ -206,6 +210,6 @@ function FooterColumn({
           </li>
         ))}
       </ul>
-    </div>
+    </nav>
   );
 }

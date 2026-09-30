@@ -83,7 +83,7 @@ export function IndustriesHero() {
           <HeroImageFrame aspect="aspect-[4/3] lg:aspect-[5/4] lg:max-h-[420px]">
             <Image
               src="/images/hero-industries.jpg"
-              alt="Modern city skyline"
+              alt="City skyline for the industries B-Way serves from Singapore"
               fill
               priority
               className="object-cover object-center"
@@ -139,7 +139,7 @@ export function IndustriesGrid() {
             title="Sectors We Serve"
             description="Explore how we support organizations across complex, regulated, and fast-moving industries."
           />
-          <TextLink href="/contact">View All Sectors</TextLink>
+          <TextLink href="/services">Explore our services</TextLink>
         </div>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -206,7 +206,7 @@ export function IndustriesFeatured() {
             <div className="relative aspect-[4/3] overflow-hidden rounded-3xl">
               <Image
                 src="https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1200&q=80"
-                alt="Construction site"
+                alt="Construction crew on site, one of the industries B-Way supports"
                 fill
                 className="object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"

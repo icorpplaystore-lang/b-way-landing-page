@@ -50,49 +50,49 @@ export const NAV_LINKS = [
 export const TECHNOLOGY_SERVICES = [
   {
     title: "Web & App Development",
-    href: "/services?tab=technology#web-app-development",
+    href: "/services/web-app-development",
     description:
       "Modern websites and applications built for performance, usability, and scale.",
   },
   {
     title: "AI Automation",
-    href: "/services?tab=technology#ai-automation",
+    href: "/services/ai-automation",
     description:
       "Intelligent workflows that reduce manual work across sales, support, and operations.",
   },
   {
     title: "Custom Software Development",
-    href: "/services?tab=technology#custom-software",
+    href: "/services/custom-software",
     description:
       "Tailored platforms designed around how your business actually operates.",
   },
   {
     title: "E-commerce",
-    href: "/services?tab=technology#ecommerce",
+    href: "/services/ecommerce",
     description:
       "Storefronts, catalog systems, and commerce journeys built to convert and grow.",
   },
   {
     title: "Cloud Solutions",
-    href: "/services?tab=technology#cloud",
+    href: "/services/cloud",
     description:
       "Secure, scalable cloud environments that support reliability and cost control.",
   },
   {
     title: "Cybersecurity",
-    href: "/services?tab=technology#cybersecurity",
+    href: "/services/cybersecurity",
     description:
       "Protect systems, data, and customer trust with practical security practices.",
   },
   {
     title: "Data Analytics",
-    href: "/services?tab=technology#data-analytics",
+    href: "/services/data-analytics",
     description:
       "Clear reporting and insight systems that help teams make better decisions.",
   },
   {
     title: "SEO & Digital Growth",
-    href: "/services?tab=technology#seo-digital-growth",
+    href: "/services/seo-digital-growth",
     description:
       "Visibility and growth programs aligned to acquisition, conversion, and retention.",
   },
@@ -113,7 +113,7 @@ export const WORKFORCE_SERVICES = [
   },
   {
     title: "Recruitment / Staffing",
-    href: "/services?tab=workforce#recruitment-staffing",
+    href: "/services/recruitment-staffing",
     description:
       "Recruitment and staffing services that connect businesses with the right people.",
   },

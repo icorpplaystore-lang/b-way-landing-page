@@ -1,4 +1,5 @@
 import { SITE } from "@/lib/constants";
+import { servicePages } from "@/lib/data/service-pages";
 import { absoluteUrl, PAGES } from "@/lib/seo/metadata";
 
 export const ENTITY = {
@@ -58,6 +59,21 @@ export function organizationNode() {
       value: SITE.eaLicence,
     },
     sameAs: [] as string[],
+    hasOfferCatalog: {
+      "@type": "OfferCatalog",
+      name: "B-Way services",
+      itemListElement: servicePages.map((service) => ({
+        "@type": "Offer",
+        itemOffered: {
+          "@type": "Service",
+          name: service.title,
+          description: service.description,
+          url: absoluteUrl(`/services/${service.slug}`),
+          provider: { "@id": ENTITY.organization },
+          areaServed: { "@type": "Country", name: "Singapore" },
+        },
+      })),
+    },
     contactPoint: [
       {
         "@type": "ContactPoint",
@@ -133,6 +149,10 @@ export function webPageNode(opts: {
     isPartOf: { "@id": ENTITY.website },
     about: { "@id": ENTITY.organization },
     inLanguage: "en-SG",
+    speakable: {
+      "@type": "SpeakableSpecification",
+      cssSelector: ["h1", "main p"],
+    },
   };
 }
 
@@ -192,12 +212,62 @@ export function homepageStructuredData() {
   ]);
 }
 
+export function itemListNode(
+  items: { name: string; path: string; image?: string }[],
+) {
+  return {
+    "@type": "ItemList",
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem",
+      position: index + 1,
+      name: item.name,
+      url: absoluteUrl(item.path),
+      ...(item.image ? { image: absoluteUrl(item.image) } : {}),
+    })),
+  };
+}
+
+export function creativeWorkNode(work: {
+  name: string;
+  description: string;
+  image: string;
+  path: string;
+}) {
+  const url = absoluteUrl(work.path);
+  return {
+    "@type": "CreativeWork",
+    "@id": `${url}#work`,
+    name: work.name,
+    headline: work.name,
+    description: work.description,
+    url,
+    image: absoluteUrl(work.image),
+    creator: { "@id": ENTITY.organization },
+    publisher: { "@id": ENTITY.organization },
+    mainEntityOfPage: url,
+    inLanguage: "en-SG",
+    about: ["Website design", "Design system"],
+  };
+}
+
 export function pageStructuredData(opts: {
   path: string;
   name: string;
   description: string;
   breadcrumbs?: { name: string; path: string }[];
   faqs?: { question: string; answer: string }[];
+  itemList?: { name: string; path: string; image?: string }[];
+  creativeWork?: {
+    name: string;
+    description: string;
+    image: string;
+    path: string;
+  };
+  service?: {
+    name: string;
+    description: string;
+    path: string;
+  };
 }) {
   const nodes: Record<string, unknown>[] = [
     organizationNode(),
@@ -205,6 +275,23 @@ export function pageStructuredData(opts: {
   ];
   if (opts.breadcrumbs?.length) {
     nodes.push(breadcrumbListNode(opts.breadcrumbs));
+  }
+  if (opts.itemList?.length) {
+    nodes.push(itemListNode(opts.itemList));
+  }
+  if (opts.creativeWork) {
+    nodes.push(creativeWorkNode(opts.creativeWork));
+  }
+  if (opts.service) {
+    nodes.push({
+      "@type": "Service",
+      name: opts.service.name,
+      description: opts.service.description,
+      url: absoluteUrl(opts.service.path),
+      serviceType: opts.service.name,
+      provider: { "@id": ENTITY.organization },
+      areaServed: { "@type": "Country", name: "Singapore" },
+    });
   }
   const faq = opts.faqs?.length ? faqPageNode(opts.faqs) : null;
   if (faq) nodes.push(faq);

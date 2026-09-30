@@ -35,11 +35,11 @@ export const PAGES: Record<string, PageSeo> = {
     keywords: ["industry solutions Singapore", "sector workforce solutions"],
   },
   portfolio: {
-    title: "Portfolio — Real Solutions. Real Impact.",
+    title: "Portfolio — Website Case Studies",
     description:
-      "Selected B-Way projects across web, mobile, SaaS, and AI — built for clarity, speed, and lasting partnership.",
+      "Six B-Way website case studies: Frogr, The Banik, The Brand, Rush, Relate, and Elementum. Each page covers the design system, what changed, and the client’s words.",
     path: "/portfolio",
-    keywords: ["project portfolio", "case studies", "digital products"],
+    keywords: ["website portfolio", "website case studies", "design system"],
   },
   about: {
     title: "About Us — Broadway Global Solutions",
@@ -101,6 +101,49 @@ export function absoluteUrl(path = "/"): string {
   return `${base}${path.startsWith("/") ? path : `/${path}`}`;
 }
 
+/** Every public page should be crawled and indexed. */
+export const indexRobots: Metadata["robots"] = {
+  index: true,
+  follow: true,
+  googleBot: {
+    index: true,
+    follow: true,
+    "max-image-preview": "large",
+    "max-snippet": -1,
+    "max-video-preview": -1,
+  },
+};
+
+export const noIndexRobots: Metadata["robots"] = {
+  index: false,
+  follow: false,
+};
+
+const geoMeta = {
+  "geo.region": "SG-01",
+  "geo.placename": "Singapore, Midview City",
+  "geo.position": "1.3588;103.8339",
+  ICBM: "1.3588, 103.8339",
+} as const;
+
+export function indexedPageFields(path: string): Metadata {
+  const canonical = absoluteUrl(path);
+  return {
+    robots: indexRobots,
+    alternates: {
+      canonical,
+      languages: {
+        "en-SG": canonical,
+        en: canonical,
+      },
+    },
+    authors: [{ name: SITE.legalName, url: SITE.url }],
+    creator: SITE.legalName,
+    publisher: SITE.legalName,
+    other: geoMeta,
+  };
+}
+
 /**
  * Builds Next.js Metadata for a registered page (SEO + AEO/GEO friendly).
  */
@@ -114,23 +157,14 @@ export function buildMetadata(pageKey: keyof typeof PAGES): Metadata {
   );
 
   return {
+    ...indexedPageFields(page.path),
     title: {
       absolute: page.title,
     },
     description: page.description,
     keywords,
-    authors: [{ name: SITE.legalName, url: SITE.url }],
-    creator: SITE.legalName,
-    publisher: SITE.legalName,
     applicationName: SITE.name,
     category: "Business",
-    alternates: {
-      canonical,
-      languages: {
-        "en-SG": canonical,
-        en: canonical,
-      },
-    },
     openGraph: {
       type: "website",
       locale: SITE.locale,
@@ -152,23 +186,6 @@ export function buildMetadata(pageKey: keyof typeof PAGES): Metadata {
       title: page.title,
       description: page.description,
       images: ["/opengraph-image"],
-    },
-    robots: {
-      index: true,
-      follow: true,
-      googleBot: {
-        index: true,
-        follow: true,
-        "max-image-preview": "large",
-        "max-snippet": -1,
-        "max-video-preview": -1,
-      },
-    },
-    other: {
-      "geo.region": "SG-01",
-      "geo.placename": "Singapore, Midview City",
-      "geo.position": "1.3588;103.8339",
-      ICBM: "1.3588, 103.8339",
     },
   };
 }

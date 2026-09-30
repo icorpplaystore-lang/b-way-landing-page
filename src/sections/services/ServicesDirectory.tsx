@@ -398,7 +398,7 @@ function TechnologyPanel() {
     id: service.id,
     title: service.title,
     description: service.description,
-    href: "/contact",
+    href: `/services/${service.id}`,
     image: technologyImages[service.id],
     icon: service.icon,
     tone: service.tone,

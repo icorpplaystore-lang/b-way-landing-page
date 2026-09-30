@@ -15,6 +15,7 @@ type ButtonProps = {
   icon?: LucideIcon;
   showArrow?: boolean;
   type?: "button" | "submit" | "reset";
+  disabled?: boolean;
   onClick?: () => void;
 };
 
@@ -45,6 +46,7 @@ export function Button({
   icon: Icon,
   showArrow = false,
   type = "button",
+  disabled = false,
   onClick,
 }: ButtonProps) {
   const classes = cn(
@@ -87,7 +89,12 @@ export function Button({
   }
 
   return (
-    <button type={type} onClick={onClick} className={classes}>
+    <button
+      type={type}
+      onClick={onClick}
+      disabled={disabled}
+      className={cn(classes, disabled && "cursor-not-allowed opacity-60")}
+    >
       {content}
     </button>
   );

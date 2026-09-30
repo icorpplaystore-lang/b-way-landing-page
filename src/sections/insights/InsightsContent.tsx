@@ -9,6 +9,39 @@ import { TextLink } from "@/components/ui/TextLink";
 import { articles, insightCategories } from "@/lib/data/site-content";
 import { cn } from "@/lib/utils";
 
+const TOPIC_PAGES: Record<string, { href: string; label: string }> = {
+  "AI & Automation": {
+    href: "/services/ai-automation",
+    label: "Explore AI automation",
+  },
+  Workforce: {
+    href: "/services/recruitment-staffing",
+    label: "Explore recruitment",
+  },
+  Compliance: { href: "/compliance", label: "Explore compliance" },
+  Cloud: { href: "/services/cloud", label: "Explore cloud solutions" },
+  Business: { href: "/services", label: "Explore services" },
+  Cybersecurity: {
+    href: "/services/cybersecurity",
+    label: "Explore cybersecurity",
+  },
+  Technology: { href: "/services", label: "Explore technology services" },
+  Software: { href: "/services/custom-software", label: "Explore custom software" },
+  "E-commerce": { href: "/services/ecommerce", label: "Explore e-commerce" },
+  "Data & Analytics": {
+    href: "/services/data-analytics",
+    label: "Explore data analytics",
+  },
+};
+
+function topicHref(category: string) {
+  return TOPIC_PAGES[category]?.href ?? "/services";
+}
+
+function topicLabel(category: string) {
+  return TOPIC_PAGES[category]?.label ?? "Explore services";
+}
+
 export default function InsightsContent() {
   const [filter, setFilter] = useState("All");
 
@@ -79,8 +112,8 @@ export default function InsightsContent() {
                   <h2 className="mt-3 text-lg font-bold text-slate-900">
                     {article.title}
                   </h2>
-                  <TextLink href="/contact" className="mt-4">
-                    Read more
+                  <TextLink href={topicHref(article.category)} className="mt-4">
+                    {topicLabel(article.category)}
                   </TextLink>
                 </div>
               </article>

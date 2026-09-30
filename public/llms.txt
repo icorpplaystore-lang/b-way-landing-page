@@ -21,19 +21,19 @@ B-Way (Broadway Global Solutions Pte Ltd) helps businesses build digital solutio
 ## What B-Way offers
 
 ### Technology Solutions
-- Web & App Development
-- AI Automation
-- Custom Software Development
-- E-commerce
-- Cloud Solutions
-- Cybersecurity
-- Data Analytics
-- SEO & Digital Growth
+- Web & App Development: https://bwayglobal.com/services/web-app-development
+- AI Automation: https://bwayglobal.com/services/ai-automation
+- Custom Software Development: https://bwayglobal.com/services/custom-software
+- E-commerce: https://bwayglobal.com/services/ecommerce
+- Cloud Solutions: https://bwayglobal.com/services/cloud
+- Cybersecurity: https://bwayglobal.com/services/cybersecurity
+- Data Analytics: https://bwayglobal.com/services/data-analytics
+- SEO & Digital Growth: https://bwayglobal.com/services/seo-digital-growth
 
 ### Workforce & Business Solutions
 - For Employers: https://bwayglobal.com/employers
 - For Job Seekers: https://bwayglobal.com/job-seekers
-- Recruitment / Staffing
+- Recruitment / Staffing: https://bwayglobal.com/services/recruitment-staffing
 - Compliance & Regulatory Excellence: https://bwayglobal.com/compliance
 
 ## Important pages
@@ -47,6 +47,17 @@ B-Way (Broadway Global Solutions Pte Ltd) helps businesses build digital solutio
 - Contact: https://bwayglobal.com/contact
 - Privacy: https://bwayglobal.com/privacy
 - Terms: https://bwayglobal.com/terms
+
+## Website case studies
+
+Each study explains the design system, what was enhanced, and a client note. The page image is the full website.
+
+- Frogr: https://bwayglobal.com/portfolio/frogr
+- The Banik: https://bwayglobal.com/portfolio/the-banik
+- The Brand: https://bwayglobal.com/portfolio/the-brand
+- Rush: https://bwayglobal.com/portfolio/rush
+- Relate: https://bwayglobal.com/portfolio/relate
+- Elementum: https://bwayglobal.com/portfolio/elementum
 
 ## Geography
 

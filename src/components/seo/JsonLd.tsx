@@ -13,6 +13,18 @@ type JsonLdProps =
       description: string;
       breadcrumbs?: { name: string; path: string }[];
       faqs?: { question: string; answer: string }[];
+      itemList?: { name: string; path: string; image?: string }[];
+      creativeWork?: {
+        name: string;
+        description: string;
+        image: string;
+        path: string;
+      };
+      service?: {
+        name: string;
+        description: string;
+        path: string;
+      };
     };
 
 /** AEO-friendly JSON-LD for search & answer engines */
